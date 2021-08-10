@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: user-service
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
 eureka:
   client:
     register-with-eureka: true
@@ -12,5 +22,7 @@ eureka:
       defaultZone: http://127.0.0.1:8761/eureka
   # 랜덤 포트에 할당된 서비스들의 존재들으 구분하기 위해 작성하는 부분
   instance:
-    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
-
+    # ${spring.cloud.client.hostname}
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+greeting:
+  message: Welcome to the Simple E-commerce.
