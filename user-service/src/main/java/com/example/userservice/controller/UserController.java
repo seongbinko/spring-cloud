@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// @RequestMapping("/user-service/") // Api gateway 설정을 함 불필요한 방식
 @RestController
-@RequestMapping("/user-service/") // 명시적으로 한 것 쓰지 않은 것과 같다
+@RequestMapping("/")
 public class UserController {
 
     private Environment env;

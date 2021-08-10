@@ -26,3 +26,5 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 greeting:
   message: Welcome to the Simple E-commerce.
+gateway:
+  ip: 192.168.110.117
