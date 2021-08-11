@@ -28,3 +28,11 @@ greeting:
   message: Welcome to the Simple E-commerce.
 gateway:
   ip: 192.168.110.117
+
+logging:
+  level:
+    com.example.userservice: DEBUG
+
+token:
+  expiration_time: 86400000 # 1 day
+  secret: user_token

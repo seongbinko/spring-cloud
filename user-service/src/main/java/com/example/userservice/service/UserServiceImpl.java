@@ -78,7 +78,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto getUserDetailsByEmail(String userName) {
-        return null;
+
+        return new ModelMapper().map(userRepository.findByEmail(userName), UserDto.class);
     }
 
 }
