@@ -49,6 +49,14 @@ spring:
             - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -72,7 +80,7 @@ spring:
             - Path=/second-service/**
           filters:
 #            - AddRequestHeader=second-request, second-requests-header2
-#            - AddResponseHeader=second-response, second-response-header2
+            #            - AddResponseHeader=second-response, second-response-header2
             - name: CustomFilter
             - name: LoggingFilter
               args:
@@ -81,3 +89,9 @@ spring:
                 postLogger: true
 token:
   secret: user_token
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace
