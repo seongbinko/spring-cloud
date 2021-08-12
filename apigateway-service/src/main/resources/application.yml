@@ -43,7 +43,7 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/users
+            - Path=/user-service/**
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
@@ -79,7 +79,7 @@ spring:
           predicates:
             - Path=/second-service/**
           filters:
-#            - AddRequestHeader=second-request, second-requests-header2
+            #            - AddRequestHeader=second-request, second-requests-header2
             #            - AddResponseHeader=second-response, second-response-header2
             - name: CustomFilter
             - name: LoggingFilter
@@ -87,8 +87,8 @@ spring:
                 baseMessage: Spring Cloud Gateway Global Filter
                 preLogger: true
                 postLogger: true
-token:
-  secret: user_token
+#token:
+#  secret: user_token
 
 management:
   endpoints:
