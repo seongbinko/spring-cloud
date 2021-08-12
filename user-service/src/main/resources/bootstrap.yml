@@ -2,6 +2,6 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:8888
-      name: config-service #application name을 쓴다는 것은 config-service의 기본 application.yml 파일을 불러온다는 얘기
+      name: user-service #application name을 쓴다는 것은 config-service의 기본 application.yml 파일을 불러온다는 얘기
 #  profiles:
 #    active: dev
