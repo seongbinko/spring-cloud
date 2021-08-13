@@ -1,15 +1,15 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,19 +22,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final Environment env;
     private final RestTemplate restTemplate;
+    private final OrderServiceClient orderServiceClient;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Environment env, RestTemplate restTemplate) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.env = env;
-        this.restTemplate = restTemplate;
-    }
+//    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Environment env, RestTemplate restTemplate) {
+//        this.userRepository = userRepository;
+//        this.passwordEncoder = passwordEncoder;
+//        this.env = env;
+//        this.restTemplate = restTemplate;
+//    }
 
 
     @Override
@@ -77,14 +80,24 @@ public class UserServiceImpl implements UserService{
 //        List<ResponseOrder> orders = new ArrayList<>();
 
         /* Using as rest template */
-        String orderUrl = String.format(env.getProperty("order_service.url"), userId); // %s에 대해당하는 부분에 USerId를 삽입한다.
-        ResponseEntity<List<ResponseOrder>> orderListResponse =
-                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
-                        new ParameterizedTypeReference<List<ResponseOrder>>() {
-                        });
-        List<ResponseOrder> ordersList = orderListResponse.getBody();
+//        String orderUrl = String.format(env.getProperty("order_service.url"), userId); // %s에 대해당하는 부분에 USerId를 삽입한다.
+//        ResponseEntity<List<ResponseOrder>> orderListResponse =
+//                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+//                        new ParameterizedTypeReference<List<ResponseOrder>>() {
+//                        });
+//        List<ResponseOrder> ordersList = orderListResponse.getBody();
 
-        userDto.setOrders(ordersList);
+        /* Using a feign client*/
+        /* Feign exception Handling */
+//        List<ResponseOrder> ordersList = null;
+//        try {
+//            ordersList = orderServiceClient.getOrders(userId);
+//        } catch (FeignException ex) {
+//            log.error(ex.getMessage());
+//        }
+
+        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+        userDto.setOrders(orderList);
 
         return userDto;
     }
