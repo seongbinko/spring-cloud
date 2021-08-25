@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService{
     private final Environment env;
     private final RestTemplate restTemplate;
     private final OrderServiceClient orderServiceClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, Environment env, RestTemplate restTemplate) {
 //        this.userRepository = userRepository;
@@ -95,8 +98,15 @@ public class UserServiceImpl implements UserService{
 //        } catch (FeignException ex) {
 //            log.error(ex.getMessage());
 //        }
-
-        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+        /* ErrorDecoder */
+//        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+        log.info("Before call orders microservice");
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<ResponseOrder> orderList = circuitbreaker.run(
+                () -> orderServiceClient.getOrders(userId), // 있으면 이것 없으면 밑에 빈 리스트를 orders에 담음
+                throwable -> new ArrayList<>()
+        );
+        log.info("After call orders microservice");
         userDto.setOrders(orderList);
 
         return userDto;

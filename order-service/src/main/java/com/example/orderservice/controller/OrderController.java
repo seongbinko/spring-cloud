@@ -48,18 +48,19 @@ public class OrderController {
         OrderDto orderDto = mapper.map(orderDetails, OrderDto.class);
         orderDto.setUserId(userId);
         /* jpa */
-//        OrderDto createdOrder = orderService.createOrder(orderDto);
-//        ResponseOrder responseOrder = mapper.map(createdOrder, ResponseOrder.class);
+        OrderDto createdOrder = orderService.createOrder(orderDto);
+        ResponseOrder responseOrder = mapper.map(createdOrder, ResponseOrder.class);
 
-        /* kafka */
-        orderDto.setOrderId(UUID.randomUUID().toString());
-        orderDto.setTotalPrice(orderDetails.getQty() * orderDetails.getUnitPrice());
-
-        /* send this order to the kafka */
-        kafkaProducer.send("example-catalog-topic", orderDto);
-        orderProducer.send("orders", orderDto);
-
-        ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
+//        /* kafka */
+//        orderDto.setOrderId(UUID.randomUUID().toString());
+//        orderDto.setTotalPrice(orderDetails.getQty() * orderDetails.getUnitPrice());
+//
+//        /* send this order to the kafka */
+//        kafkaProducer.send("example-catalog-topic", orderDto);
+//        orderProducer.send("orders", orderDto);
+//
+//        ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
+// CircuitBreaker를 위해서 잠시 닫아둠
 
         log.info("After added orders data");
         return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);
@@ -81,7 +82,7 @@ public class OrderController {
 //        } catch(InterruptedException ex) {
 //            log.warn(ex.getMessage());
 //        }
-
+// 강제로 오류를 발생시켜 zipkin에서 확인하기 위함
         log.info("Add retrieved orders data");
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
