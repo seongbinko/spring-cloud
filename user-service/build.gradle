@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.3.RELEASE'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.modelmapper:modelmapper:2.3.8'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     compileOnly 'org.projectlombok:lombok'

@@ -3,10 +3,11 @@ server:
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
 spring:
   application:
     name: apigateway-service
@@ -15,7 +16,6 @@ spring:
     port: 5672
     username: guest
     password: guest
-  # Filter config ??? ??
   cloud:
     gateway:
       default-filters:
@@ -35,7 +35,7 @@ spring:
             - Path=/user-service/login
             - Method=POST
           filters:
-            - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
+            - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
@@ -43,7 +43,15 @@ spring:
             - Path=/user-service/users
             - Method=POST
           filters:
-            - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
@@ -51,17 +59,9 @@ spring:
             - Path=/user-service/**
             - Method=GET
           filters:
-            - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
+            - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/user-service/actuator/**
-            - Method=GET,POST
-          filters:
-            - RemoveRequestHeader=Cookie #POST ??? ?? ????? ??? ?? ???? ??
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -69,14 +69,21 @@ spring:
         - id: order-service
           uri: lb://ORDER-SERVICE
           predicates:
+            - Path=/order-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
             - Path=/order-service/**
         - id: first-service
           uri: lb://MY-FIRST-SERVICE
-          # ????? ?? ??? ????.
           predicates:
             - Path=/first-service/**
           filters:
-            #            - AddRequestHeader=first-request, first-requests-header2
+            #            - AddRequestHeader=first-request, first-request-header2
             #            - AddResponseHeader=first-response, first-response-header2
             - CustomFilter
         - id: second-service
@@ -84,14 +91,15 @@ spring:
           predicates:
             - Path=/second-service/**
           filters:
-            #            - AddRequestHeader=second-request, second-requests-header2
+            #            - AddRequestHeader=second-request, second-request-header2
             #            - AddResponseHeader=second-response, second-response-header2
             - name: CustomFilter
             - name: LoggingFilter
               args:
-                baseMessage: Spring Cloud Gateway Global Filter
+                baseMessage: Hi, there.
                 preLogger: true
                 postLogger: true
+
 #token:
 #  secret: user_token
 
@@ -99,4 +107,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: busrefresh, refresh, health, beans, httptrace
+        include: refresh, health, beans, httptrace, busrefresh, info, metrics, prometheus
