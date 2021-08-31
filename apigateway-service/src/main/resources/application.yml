@@ -79,9 +79,9 @@ spring:
           predicates:
             - Path=/order-service/**
         - id: first-service
-          uri: lb://MY-FIRST-SERVICE
+          uri: lb://MY-FIRST-SERVICE # localhost:8081이 더이상 아님
           predicates:
-            - Path=/first-service/**
+            - Path=/first-service/** #클라이언트에서 해당 url로 요청이 들어오면 uri, eureka서버, 즉 discovery서버에 my-first-service라 등록되어있는 것을 찾아 연결해준다.
           filters:
             #            - AddRequestHeader=first-request, first-request-header2
             #            - AddResponseHeader=first-response, first-response-header2
