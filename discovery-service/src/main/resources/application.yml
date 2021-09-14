@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: discoveryservice
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888 # 도커에서 config를 변경할 것임
+      name: ecommerce
 eureka:
   client:
     register-with-eureka: false
