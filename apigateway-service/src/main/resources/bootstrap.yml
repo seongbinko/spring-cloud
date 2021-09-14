@@ -2,6 +2,6 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:8888
-      name: ecommerce #application name을 쓴다는 것은 config-service의 기본 application.yml 파일을 불러온다는 얘기 # ecommerce
+      name: user-service #application name을 쓴다는 것은 config-service의 기본 application.yml 파일을 불러온다는 얘기 # ecommerce
 #  profiles:
 #    active: dev # user-service의 profile도 Dev 만약 Prod로 설정할 시에 toekn_secret이 다르기 때문에 dev로 설정

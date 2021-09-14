@@ -20,11 +20,11 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-#    driver-class-name: com.mysql.cj.jdbc.Driver #CircuitBreaker를 위해서 잠시 닫아둠
-#    url: jdbc:mysql://localhost:3306/msa_test_db
-#    username: root
+#    driver-class-name: org.h2.Driver
+    #    url: jdbc:h2:mem:testdb
+    driver-class-name: com.mysql.cj.jdbc.Driver #CircuitBreaker를 위해서 잠시 닫아둠
+    url: jdbc:mysql://localhost:3306/msa_test_db
+    username: root
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
